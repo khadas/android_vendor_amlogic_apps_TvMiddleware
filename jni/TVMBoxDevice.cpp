@@ -1473,8 +1473,8 @@ static void dev_play_dtv(JNIEnv *env, jobject obj, jint vpid, jint vfmt, jint ap
 		return;
 
 	AM_AV_StartTSWithPCR(AV_DEV_NO, vpid, apid, pcr, (AM_AV_VFormat_t)vfmt, (AM_AV_AFormat_t)afmt);
-	LOGE("dev_play_dtv---%d---%d---%d---%d\n",vidoview_x,vidoview_y,vidoview_w,vidoview_h);
-	dev_set_video_window(env,obj,vidoview_x,vidoview_y,vidoview_w,vidoview_h);
+	//LOGE("dev_play_dtv---%d---%d---%d---%d\n",vidoview_x,vidoview_y,vidoview_w,vidoview_h);
+	//dev_set_video_window(env,obj,vidoview_x,vidoview_y,vidoview_w,vidoview_h);
 }
 
 static void dev_switch_dtv_audio(JNIEnv *env, jobject obj, jint apid, jint afmt)
