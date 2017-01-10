@@ -801,7 +801,7 @@ public class TVProgram{
 		}
 
 		boolean newInsert = true;
-		String cmd;
+		String cmd = null;
 		if (type == TYPE_PLAYBACK){
 			cmd = "select * from srv_table where service_type = "+type;
 			Cursor cr = context.getContentResolver().query(TVDataProvider.RD_URL,
@@ -853,7 +853,7 @@ public class TVProgram{
 					null, cmd, null, null);
 		}
 		
-
+		Log.d(TAG, "add new program, sqlite cmd:"+cmd);
 		/**FIXME: here we have a bug, for non-playback programs,
 		 * the program we selected may be not the one we inserted.*/
 		cmd = "select * from srv_table where vid_pid="+vpid+" and vid_fmt="+vfmt+" and service_type = "+type;
@@ -1374,14 +1374,14 @@ public class TVProgram{
 				cmd += " where skip <= 1 ";			
 			}
 		}
-
-		cmd += " and " + getCurrentSourceString(context);
+		//play back file,not need get cur source 
+		//cmd += " and " + getCurrentSourceString(context);
 		
 		if(TVConfigResolver.getConfig(context,"tv:dtv:dvbt:lcn",false)==false)
 			cmd += " order by chan_order";
 		else
 			cmd +=" order by lcn";
-
+		//Log.d(TAG,"select by typr cmd:"+cmd);
 		Cursor c = context.getContentResolver().query(TVDataProvider.RD_URL,
 				null,
 				cmd,

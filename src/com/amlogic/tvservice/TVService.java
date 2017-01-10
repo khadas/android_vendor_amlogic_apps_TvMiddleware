@@ -2397,6 +2397,7 @@ public class TVService extends Service implements TVConfig.Update{
             }
 
             if(p != null){
+                Log.d(TAG,"select has program");
                 TVProgram.Audio audio;
                 int apid, afmt;
 
@@ -2412,6 +2413,8 @@ public class TVService extends Service implements TVConfig.Update{
                         programAudioPID = apid;
                     }
                 }
+            }else{
+                Log.d(TAG,"select no program");
             }
         }
     }
