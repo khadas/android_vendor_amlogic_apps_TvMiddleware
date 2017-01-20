@@ -160,9 +160,9 @@ abstract public class TVActivity extends Activity
 	
 	private int getTeletextRegionID(String ttxRegionName){
 		final String[] supportedRegions= {"English", "Deutsch", "Svenska/Suomi/Magyar",
-                                          "Italiano", "Français", "Português/Español", 
-                                          "Cesky/Slovencina", "Türkçe", "Ellinika","Alarabia / English"};
-		final int[] regionIDMaps = {16, 17, 18, 19, 20, 21, 14, 22, 55 , 64};
+                                         "Italiano", "Français", "Português/Español",
+                                          "Cesky/Slovencina", "Türkçe", "Ellinika","Alarabia / English", "Russky / Balgarski"};
+               final int[] regionIDMaps = {16, 17, 18, 19, 20, 21, 14, 22, 55 , 64, 36};
 
 		int i;
 		for (i=0; i<supportedRegions.length; i++){
