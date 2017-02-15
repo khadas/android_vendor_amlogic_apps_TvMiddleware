@@ -24,7 +24,7 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
 LOCAL_SHARED_LIBRARIES += libjnigraphics  libzvbi libam_mw libam_adp libskia liblog libcutils
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
@@ -45,7 +45,7 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
 LOCAL_SHARED_LIBRARIES += libzvbi libam_mw libam_adp libsqlite libskia liblog
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
@@ -66,7 +66,7 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
 LOCAL_SHARED_LIBRARIES += libzvbi libam_mw libam_adp libsqlite libskia liblog
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
@@ -95,7 +95,7 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
 LOCAL_SHARED_LIBRARIES += libzvbi libam_mw libam_adp libskia liblog libcutils libamavutils
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
@@ -116,7 +116,7 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
 LOCAL_SHARED_LIBRARIES += libzvbi libam_mw libam_adp libskia liblog
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
@@ -137,7 +137,7 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
 LOCAL_SHARED_LIBRARIES += libzvbi libam_mw libam_adp libskia liblog
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
@@ -156,7 +156,7 @@ LOCAL_C_INCLUDES := $(DVB_PATH)/include/am_mw \
 LOCAL_SHARED_LIBRARIES += libam_mw libam_adp liblog libcutils
 
 LOCAL_PRELINK_MODULE := false
-LOCAL_32_BIT_ONLY := true
+
 include $(BUILD_SHARED_LIBRARY)
 
 #######################################################################
