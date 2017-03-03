@@ -1929,20 +1929,24 @@ public class TVService extends Service implements TVConfig.Update{
         }
 
 		/* get dtv scan params from config */
-        boolean resort, clear, mixTvRadio;
+        boolean resort, clear, mixTvRadio, forceFTA;
         try{
             resort     = config.getBoolean("tv:scan:dtv:resort_all_programs");
             clear      = config.getBoolean("tv:scan:dtv:clear_source");
             mixTvRadio = config.getBoolean("tv:dtv:mix_tv_radio");
+            forceFTA = config.getBoolean("tv:scan:dtv:force_fta");
         }catch(Exception e){
             e.printStackTrace();
             Log.d(TAG, "Cannot read DTV scan params config !");
             resort     = false;
             clear      = false;
             mixTvRadio = false;
+            forceFTA = false;
         }
 
         tsp.setDtvParams(0, channelList, resort, clear, mixTvRadio);
+        if (forceFTA)
+            tsp.setDtvOptions(tsp.getDtvOptions() | tsp.DTV_OPTION_FTA);
 
         /** No exceptions, start scan */
         stopPlaying();
