@@ -71,9 +71,9 @@ public class TVDatabase extends SQLiteOpenHelper
 		String[] abbrev4 = {"","V","TV-G","TV-PG","TV-14","TV-MA"};
 		String[] text4   = {"","V","TV-G","TV-PG","TV-14","TV-MA"};
 		int[]    lock4   = {-1, -1,    -1,      0,      0,      0};
-		String[] abbrev5 = {"","TV-Y","TV-Y7"};
-		String[] text5   = {"","TV-Y","TV-Y7"};
-		int[]    lock5   = {-1,  0,       0};
+		String[] abbrev5 = {"","TV-NONE","TV-Y","TV-Y7"};
+		String[] text5   = {"","TV-NONE","TV-Y","TV-Y7"};
+		int[]    lock5   = { -1,     0,    0,       0};
 		String[] abbrev6 = {"","FV","TV-Y7"};
 		String[] text6   = {"","FV","TV-Y7"};
 		int[]    lock6   = {-1, -1,       0};
@@ -85,9 +85,9 @@ public class TVDatabase extends SQLiteOpenHelper
 		                    "“Not Rated by MPAA"};
 		int[]    lock7   = {-1, -1, 0, 0, 0, 0, 0, 0, 0};
 		/*Extra for 'All' */
-		String[] abbrevall = {"TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA"};
-		String[] textall   = {"TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA"};
-		int[]    lockall   = {0,     0,      0,      0,      0,     0};
+		String[] abbrevall = {"TV-NONE","TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA"};
+		String[] textall   = {"TV-NONE","TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA"};
+		int[]    lockall   = {0,          0,     0,      0,      0,      0,     0};
 		
 		insertNewDimension(TVDimension.REGION_US, "US (50 states + possessions)", 
 			"Entire Audience",  0, lock0, abbrev0, text0);

@@ -28,6 +28,8 @@ public class TVDimension{
 	private String[] abbrevValues;
 	private String[] textValues;
 	private boolean isPGAll;
+	/*set tv none block, all programe is block*/
+	public boolean isNoneBlock;
 
 	TVDimension(Context context, Cursor c){
 		this.context = context;
@@ -68,8 +70,12 @@ public class TVDimension{
 		
 		if (ratingRegion == REGION_US && name.equals("All")){
 			isPGAll = true;
+			if(this.lockValues[0] == 1){
+				isNoneBlock = true;
+			}
 		}else{
 			isPGAll = false;
+			isNoneBlock = false;
 		}
 	}
 	
@@ -287,11 +293,25 @@ public class TVDimension{
 	 *@return 是否block
 	 */
 	public static boolean isBlocked(Context context, VChipRating definedRating){
+
+		TVDimension dmNone = selectByName(context, TVDimension.REGION_US, "All");
+
+		if(dmNone.getNoneLockStatus() == true){
+			/*is set tv none, all programe is block*/
+			Log.d(TAG,"isBlocked isNoneBlock:"+true);
+			return true;
+		} else {
+			Log.d(TAG,"isBlocked false isNoneBlock:"+false);
+		}
+
 		if (definedRating != null){
+			Log.d(TAG, "isBlocked: REG:"+definedRating.getRegion()+", DIMEN "+definedRating.getDimension()+", getValue "+definedRating.getValue());
 			TVDimension dm = selectByIndex(context, definedRating.getRegion(), definedRating.getDimension());
 			if (dm != null){
 				return (dm.getLockStatus(definedRating.getValue()) == 1);
 			}
+		} else {
+			Log.d(TAG,"isBlocked definedRating is null");
 		}
 		
 		return false;
@@ -337,6 +357,18 @@ public class TVDimension{
 		return graduatedScale;
 	}
 	
+	public boolean getNoneLockStatus(){
+		int[] Rating_status_ALL={1,1,1,1,1,1,1,};
+		String[] abb={"TV-NONE","TV-Y","TV-Y7","TV-G","TV-PG","TV-14","TV-MA"};
+		Rating_status_ALL = getLockStatus(abb);
+		if(Rating_status_ALL[0]==1){
+			isNoneBlock = true;
+		} else {
+			isNoneBlock = false;
+		}
+		Log.d(TAG,"getNoneLockStatus isNoneBlock:"+isNoneBlock);
+		return isNoneBlock;
+	}
 	/**
 	 *取得该dimension的所有values的加锁状态
 	 *@return 返回所有values的加锁状态，0-未加锁，-1-无效值，即不能对该项进行设置，其他-已加锁
