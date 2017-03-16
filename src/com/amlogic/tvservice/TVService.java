@@ -658,6 +658,10 @@ public class TVService extends Service implements TVConfig.Update{
                             String mode = config.getString("tv:dtv:mode");
                             if(mode.contains("dvbs"))
                                 return;
+							if (status == TVRunningStatus.STATUS_ANALYZE_CHANNEL) {
+								Log.d(TAG, "EVENT_NIT_END status is analyze--");
+								return;
+							}
                             if(mode.contains("dvbc")||mode.contains("dvbt")||mode.contains("dvbt2")||mode.contains("isdbt")){
                                 TVMessage msg = new TVMessage(TVMessage.TYPE_NIT_TABLE_VER_CHANGED,event.dvbVersion);
                                 sendMessage(msg);
@@ -1437,6 +1441,10 @@ public class TVService extends Service implements TVConfig.Update{
         TVProgram p = null;
         TVChannelParams fe_params;
 
+		if (status == TVRunningStatus.STATUS_ANALYZE_CHANNEL) {
+			Log.d(TAG, "playCurrentProgram status is analyze--");
+			return;
+		}
         Log.d(TAG, "try to playCurrentProgram");
 
         if(inputSource == TVConst.SourceInput.SOURCE_ATV){
@@ -1538,6 +1546,15 @@ public class TVService extends Service implements TVConfig.Update{
             return;
         }
         Log.d(TAG, "Start analyzing DTV in channel "+channelNo+"("+cp.getFrequency()+" Hz)...");
+		if (status == TVRunningStatus.STATUS_SCAN) {
+            Log.d(TAG, "status is scan--");
+            return;
+        } else if(status == TVRunningStatus.STATUS_ANALYZE_CHANNEL) {
+            Log.d(TAG, "status is analyze--");
+            return;
+        } else {
+            Log.d(TAG, "status is other--");
+        }
 		/*Send scan dtv channel start message.*/
         sendMessage(TVMessage.scanDTVChannelStart(channelNo));
 
@@ -1552,7 +1569,16 @@ public class TVService extends Service implements TVConfig.Update{
             Log.d(TAG, "Channel not exist, cannot analyze this channel!");
             return;
         }
-        Log.d(TAG, "Start analyzing DTV in channel ("+cp.getFrequency()+" Hz)...");
+        Log.d(TAG, "Start analyzing DTV in channel ("+cp.getFrequency()+" Hz)...status:"+status);
+		if (status == TVRunningStatus.STATUS_SCAN) {
+            Log.d(TAG, "status is scan--");
+            return;
+        } else if(status == TVRunningStatus.STATUS_ANALYZE_CHANNEL) {
+            Log.d(TAG, "status is analyze--");
+            return;
+        } else {
+            Log.d(TAG, "status is other--");
+        }
 		/*Send scan dtv channel start message.*/
         sendMessage(TVMessage.scanDTVChannelStart(0));
 
@@ -1880,6 +1906,7 @@ public class TVService extends Service implements TVConfig.Update{
 
                     if(chanID < 0){
                         Log.d(TAG, "Cannot get current channel for ATV manual scan!");
+                        status = TVRunningStatus.STATUS_STOPPED;
                         return;
                     }
                     tsp.setAtvStartFreq(p.getChannel().getParams().frequency);
@@ -1894,6 +1921,7 @@ public class TVService extends Service implements TVConfig.Update{
 
         } catch (Exception e) {
             e.printStackTrace();
+            status = TVRunningStatus.STATUS_STOPPED;
             Log.d(TAG, "Cannot read atv config !!!");
             return;
         }
@@ -2123,12 +2151,17 @@ public class TVService extends Service implements TVConfig.Update{
                 Log.e(TAG, "set input source to "+source.name()+" failed");
                 break;
             case TVDevice.Event.EVENT_FRONTEND:
+                Log.e(TAG, "EVENT_FRONTEND case");
                 if(isInTVMode()){
+                    Log.e(TAG, "EVENT_FRONTEND is tvmode");
                     if(channelParams!=null && event.feParams.equals_frontendevt(channelParams)){
                         if(inputSource == TVConst.SourceInput.SOURCE_DTV){
 							/*Start EPG scanner.*/
-                            if(channelID !=-1){
+                            if(channelID !=-1&&(status != TVRunningStatus.STATUS_ANALYZE_CHANNEL)){
+                                Log.e(TAG, "set enterChannel epg");
                                 epgScanner.enterChannel(channelID);
+                            } else {
+                                Log.e(TAG, "not set enterChannel epg");   
                             }
                         }
                         if((status == TVRunningStatus.STATUS_SET_FRONTEND)/* && (event.feStatus & TVChannelParams.FE_HAS_LOCK)!=0*/){
@@ -2209,8 +2242,10 @@ public class TVService extends Service implements TVConfig.Update{
     private void resolveEpgEvent(TVEpgScanner.Event event){
         switch(event.type){
             case TVEpgScanner.Event.EVENT_PROGRAM_AV_UPDATE:
-                Log.d(TAG, "Detect program "+event.programID+"'s AV changed, try a replay now...");
-                playCurrentProgramAV();
+                Log.d(TAG, "Detect program "+event.programID+"'s AV changed, try a replay now...T:"+status+" T:"+TVRunningStatus.STATUS_ANALYZE_CHANNEL);
+                if ((status != TVRunningStatus.STATUS_ANALYZE_CHANNEL)&&(status != TVRunningStatus.STATUS_SCAN)){
+                    playCurrentProgramAV();
+                }
                 break;
             case TVEpgScanner.Event.EVENT_PROGRAM_NAME_UPDATE:
                 Log.d(TAG, "Detect program "+event.programID+"'s name changed, send msg to clients...");
@@ -2223,7 +2258,7 @@ public class TVService extends Service implements TVConfig.Update{
             case TVEpgScanner.Event.EVENT_CHANNEL_UPDATE:
                 Log.d(TAG, "Detect channel "+event.channelID+" update, try a re-scan now...");
                 if (event.channelID == channelID){
-                    if(channelParams.isATSCMode())
+                    if(channelParams != null && channelParams.isATSCMode())
                         startChannelAnalyzing(getChannelNoByParams(channelParams));
                     else
                         startChannelAnalyzing(channelParams);
@@ -2236,7 +2271,7 @@ public class TVService extends Service implements TVConfig.Update{
 
     /*Solve the events from the channel scanner.*/
     private void resolveScanEvent(TVScanner.Event event){
-        Log.d(TAG, "Channel scan event: " + event.type);
+        Log.d(TAG, "Channel scan event: " + event.type+" status:"+status);
 
         if(event.type == TVScanner.Event.EVENT_STORE_BEGIN){
             Log.d(TAG, "@@TvService to back up database");
@@ -2288,6 +2323,7 @@ public class TVService extends Service implements TVConfig.Update{
                     sendMessage(TVMessage.blindScanEnd());
                     break;
                 default:
+                    Log.d(TAG, "Blind Scan no case");
                     break;
 
             }
@@ -2299,6 +2335,7 @@ public class TVService extends Service implements TVConfig.Update{
                     replayCurrentChannel();
                     break;
                 default:
+                Log.d(TAG, "Blind analyzing no case");
                     break;
             }
         }
@@ -2532,12 +2569,10 @@ public class TVService extends Service implements TVConfig.Update{
                         TVChannelParams para = curReg.getChannelParams(3);
                         if (para != null){
 							/*new add a DTV & ATV program, then try play*/
-                            Log.d(TAG, "Creating analog program 3-0 in channel 3...");
                             TVChannelParams param = TVChannelParams.analogParams(para.getFrequency(), 0, 0, 0);
                             TVChannel newChan = new TVChannel(this, param);
                             TVProgram newProg = new TVProgram(this, newChan.getID(), TVProgram.TYPE_ATV,
                                     new TVProgramNumber(3, 0), 0);
-                            Log.d(TAG, "Creating digital program 3-1 in channel 3...");
                             try{
                                 String strAntenna = config.getString("tv:atsc:antenna:source");
                                 if (strAntenna.equals("cable")){
@@ -3548,8 +3583,10 @@ public class TVService extends Service implements TVConfig.Update{
 
                 if (cmd == 0)
                     epgScanner.leaveChannel();
-                else
+                else {
+                    Log.e(TAG, "resolveBackgroundCtl enterChannel epg");
                     epgScanner.enterChannel(channelID);
+                }
 
                 break;
 

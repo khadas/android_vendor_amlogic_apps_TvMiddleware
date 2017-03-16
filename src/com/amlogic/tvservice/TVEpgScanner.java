@@ -1,8 +1,9 @@
 package com.amlogic.tvservice;
-
+import android.util.Log;
 import com.amlogic.tvutil.TVChannelParams;
 
 abstract public class TVEpgScanner{
+	private static final String TAG = "TVEpgScanner";
 	public static final int MODE_ADD    = 0;
 	public static final int MODE_REMOVE = 1;
 	public static final int MODE_SET    = 2;
@@ -76,6 +77,7 @@ abstract public class TVEpgScanner{
 
 	/*Start scan the sections.*/
 	private void startScan(int mode){
+		Log.d(TAG, "startScan  start");
 		if(!created)
 			return;
 
@@ -84,6 +86,7 @@ abstract public class TVEpgScanner{
 
 	/*Stop scan the sections.*/
 	private void stopScan(int mode){
+		Log.d(TAG, "stopScan  start");
 		if(!created)
 			return;
 
@@ -100,7 +103,6 @@ abstract public class TVEpgScanner{
 		fend_dev_id = fend;
 		dmx_dev_id  = dmx;
 		fend_type   = src;
-
 		native_epg_create(fend, dmx, src, textLanguages);
 		created = true;
 	}
