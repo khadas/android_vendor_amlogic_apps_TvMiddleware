@@ -967,6 +967,7 @@ public class TVService extends Service implements TVConfig.Update{
             status = TVRunningStatus.STATUS_STOPPED;
         }else if (status == TVRunningStatus.STATUS_ANALYZE_CHANNEL){
             stopChannelAnalyzing(false);
+            channelParams = null;
             status = TVRunningStatus.STATUS_STOPPED;
         }
 
