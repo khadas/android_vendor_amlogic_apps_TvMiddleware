@@ -248,7 +248,7 @@ static jobject fpara_to_chan(JNIEnv *env, int mode, struct dvb_frontend_paramete
 		case FE_ATSC:
 			env->SetIntField(obj, gChanParamsModID, para->u.vsb.modulation);
 			break;
-			
+
 	}
 
 	return obj;
@@ -705,7 +705,7 @@ static void fend_cb(int dev_no, struct dvb_frontend_event *evt, void *user_data)
 	}
 
 	event = create_event(env, dev->dev_obj, EVENT_FRONTEND);
-	chan  = fpara_to_chan(env, dev->fend_mode, &evt->parameters);
+	chan  = fpara_to_chan(env, dev->fend_mode, (struct dvb_frontend_parameters *)&evt->parameters);
 
 	env->SetIntField(event, gEventFEStatusID, evt->status);
 	env->SetObjectField(event, gEventFEParamsID, chan);
