@@ -242,6 +242,16 @@ public class TVSubtitleView extends View {
 		}
 	}
 
+	public void init(boolean b_init){
+		if (b_init == true) {
+			Log.d(TAG, " need init ");
+			init();	
+		} else {
+			Log.d(TAG, "not need init ");	
+		}
+		
+	}
+
 	/**
 	 * 创建TVSubtitle控件
 	 */
@@ -255,7 +265,8 @@ public class TVSubtitleView extends View {
 	 */
 	public TVSubtitleView(Context context, AttributeSet attrs){
 		super(context, attrs);
-		init();
+		/*user need manual used init(true) api to init sub;because TVSubtitleView api into twice.*/
+		//init();
 	}
 
 	/**
@@ -629,8 +640,9 @@ public class TVSubtitleView extends View {
 		synchronized(lock){
 		if(!destroy){
 			init_count--;
-			destroy = true;
+
 			if(init_count == 0){
+			    destroy = true;
 				stopDecoder();
 				native_sub_clear();
 				native_sub_destroy();
@@ -640,7 +652,7 @@ public class TVSubtitleView extends View {
 	}
 
 	protected void finalize() throws Throwable {
-		dispose();
+		//dispose();
 		super.finalize();
 	}  
 

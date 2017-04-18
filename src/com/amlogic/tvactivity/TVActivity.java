@@ -76,6 +76,9 @@ abstract public class TVActivity extends Activity
 
         public void onDisconnected() {
         	connected = false;
+        	Log.d(TAG, "client onDisconnected");
+        	unregisterAllConfigCallback();
+        	Log.d(TAG, "client onDisconnected end");
         	TVActivity.this.onDisconnected();
         }
 
@@ -128,24 +131,52 @@ abstract public class TVActivity extends Activity
 		disconnect_flag = false;
     }
 
+	public void unregisterAllConfigCallback()
+	{
+		if(subtitleView != null){
+			unregisterConfigCallback("tv:subtitle:enable");
+			unregisterConfigCallback("tv:subtitle:language");
+			unregisterConfigCallback("tv:teletext:language");
+			unregisterConfigCallback("tv:atsc:cc:caption");
+			unregisterConfigCallback("tv:atsc:cc:foregroundcolor");
+			unregisterConfigCallback("tv:atsc:cc:foregroundopacity");
+			unregisterConfigCallback("tv:atsc:cc:backgroundcolor");
+			unregisterConfigCallback("tv:atsc:cc:backgroundopacity");
+			unregisterConfigCallback("tv:atsc:cc:fontstyle");
+			unregisterConfigCallback("tv:atsc:cc:fontsize");
+			unregisterConfigCallback("tv:atsc:cc:enable");
+		}
+	}
+
     @Override
     protected void onDestroy() {
 	Log.d(TAG, "onDestroy");
-
+	ViewGroup root = (ViewGroup)getWindow().getDecorView().findViewById(android.R.id.content);
+	if (subtitleView!=null) {
+		if (externalSubtitleView == false) {
+			Log.d(TAG, "onDestroy sub remove");
+			root.removeView(subtitleView);
+		}
+	}
 	if(subtitleView != null) {
-		unregisterConfigCallback("tv:subtitle:enable");
-		unregisterConfigCallback("tv:subtitle:language");
-		unregisterConfigCallback("tv:teletext:language");
-		unregisterConfigCallback("tv:atsc:cc:caption");
-		unregisterConfigCallback("tv:atsc:cc:foregroundcolor");
-		unregisterConfigCallback("tv:atsc:cc:foregroundopacity");
-		unregisterConfigCallback("tv:atsc:cc:backgroundcolor");
-		unregisterConfigCallback("tv:atsc:cc:backgroundopacity");
-		unregisterConfigCallback("tv:atsc:cc:fontstyle");
-		unregisterConfigCallback("tv:atsc:cc:fontsize");
-		unregisterConfigCallback("tv:atsc:cc:enable");
+		Log.d(TAG, "onDestroy sub clear");
+		unregisterAllConfigCallback();
+		Log.d(TAG, "onDestroy sub clear start ");
 		subtitleView.dispose();
+		Log.d(TAG, "onDestroy sub clear end dispose");
 		subtitleView = null;
+	} else {
+		Log.d(TAG, "onDestroy subtitleView null");
+	}
+
+	if (videoView!=null) {
+		videoView.getHolder().removeCallback(surfaceHolderCallback);
+		if (externalVideoView == false) {
+			root.removeView(videoView);
+			Log.d(TAG, "onDestroy videoView removeView");
+		}
+	} else {
+		Log.d(TAG, "onDestroy videoView null");
 	}
 
 	videoView = null;
@@ -154,7 +185,7 @@ abstract public class TVActivity extends Activity
 		client.disconnect(this);
 		disconnect_flag = true;
 	}
-
+	client = null;
 	super.onDestroy();
     }
 	
@@ -620,11 +651,23 @@ abstract public class TVActivity extends Activity
      *在Activity上创建VideoView和SubtitleView
      */
     public void openVideo(VideoView view, TVSubtitleView subv) {
-        Log.d(TAG, "openVideo view="+view+" subv="+subv);
-		
+        Log.d(TAG, "openVideo view");
+
         ViewGroup root = (ViewGroup)getWindow().getDecorView().findViewById(android.R.id.content);
 
 		if(subv!=null){
+			if (subtitleView!=null) {
+				if (externalSubtitleView == false) {
+					root.removeView(subtitleView);
+				}
+				unregisterAllConfigCallback();
+				Log.d(TAG, "openVideo sub clear start ");
+				subtitleView.dispose();
+				Log.d(TAG, "openVideo sub clear end dispose");
+				subtitleView = null;
+			} else {
+				Log.d(TAG, "openVideo subtitleView is null");
+			}
 			subtitleView = subv;
 			externalSubtitleView = true;
 		}else if(subtitleView == null) {
@@ -635,6 +678,12 @@ abstract public class TVActivity extends Activity
         }
 
 		if(view!=null){
+			if (videoView!=null) {
+				videoView.getHolder().removeCallback(surfaceHolderCallback);
+				if (externalVideoView == false) {
+					root.removeView(videoView);
+				}
+			}
 			videoView = view;
 			externalVideoView = true;
 			if( Integer.valueOf(android.os.Build.VERSION.SDK)>21) {

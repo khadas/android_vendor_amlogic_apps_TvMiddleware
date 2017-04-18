@@ -362,7 +362,7 @@ public class TVConfig{
 	 *构造函数
 	 */
 	public TVConfig(Context context){
-		this.context = context;
+		this.context = context.getApplicationContext();//context;
 		init();
 	}
 

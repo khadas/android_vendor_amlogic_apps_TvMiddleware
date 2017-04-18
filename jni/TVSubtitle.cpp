@@ -491,6 +491,9 @@ error:
                 env->DeleteGlobalRef(data->obj_bitmap);
                 data->obj_bitmap = NULL;
             }
+            if (data->buffer) {
+                data->buffer = NULL;
+            }
             pthread_mutex_destroy(&data->lock);
         }
 
