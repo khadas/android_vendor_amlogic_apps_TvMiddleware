@@ -15,6 +15,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := TVSubtitle.cpp
 LOCAL_ARM_MODE := arm
 LOCAL_C_INCLUDES := external/libzvbi/src \
+	vendor/amlogic/external/libzvbi/src \
 	$(DVB_PATH)/include/am_mw \
 	$(DVB_PATH)/include/am_adp \
 	bionic/libc/include \
@@ -36,6 +37,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := TVDatabase.c
 LOCAL_ARM_MODE := arm
 LOCAL_C_INCLUDES := external/libzvbi/src \
+	vendor/amlogic/external/libzvbi/src \
 	$(DVB_PATH)/include/am_mw \
 	$(DVB_PATH)/include/am_adp \
 	external/sqlite/dist \
@@ -57,6 +59,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := TVDatabaseCheck.c
 LOCAL_ARM_MODE := arm
 LOCAL_C_INCLUDES := external/libzvbi/src \
+	vendor/amlogic/external/libzvbi/src \
 	$(DVB_PATH)/include/am_mw \
 	$(DVB_PATH)/include/am_adp \
 	external/sqlite/dist \
@@ -77,6 +80,7 @@ LOCAL_MODULE    := libjnitvmboxdevice
 LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := TVMBoxDevice.cpp
 LOCAL_C_INCLUDES := external/libzvbi/src \
+	vendor/amlogic/external/libzvbi/src \
 	$(DVB_PATH)/include/am_mw \
 	$(DVB_PATH)/include/am_adp \
 	external/sqlite/dist \
@@ -90,7 +94,9 @@ LOCAL_C_INCLUDES := external/libzvbi/src \
         vendor/amlogic/frameworks/av/LibPlayer/dvbplayer/include\
         vendor/amlogic/frameworks/av/LibPlayer/amadec/include\
 	vendor/amlogic/frameworks/av/LibPlayer/amavutils/include\
-	$(DVB_PATH)/android/ndk/include
+	hardware/amlogic/media/amavutils/include\
+	$(DVB_PATH)/android/ndk/include\
+	$(DVB_PATH)/android/ndk/include/linux
 
 LOCAL_SHARED_LIBRARIES += libzvbi libam_mw libam_adp libskia liblog libcutils libamavutils
 
@@ -107,6 +113,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := TVScanner.c
 LOCAL_ARM_MODE := arm
 LOCAL_C_INCLUDES := external/libzvbi/src \
+	vendor/amlogic/external/libzvbi/src \
 	$(DVB_PATH)/include/am_mw \
 	$(DVB_PATH)/include/am_adp \
 	external/sqlite/dist \
@@ -128,6 +135,7 @@ LOCAL_MODULE_TAGS := optional
 LOCAL_SRC_FILES := TVEpgScanner.c
 LOCAL_ARM_MODE := arm
 LOCAL_C_INCLUDES := external/libzvbi/src \
+	vendor/amlogic/external/libzvbi/src \
 	$(DVB_PATH)/include/am_mw \
 	$(DVB_PATH)/include/am_adp \
 	external/sqlite/dist \

@@ -742,8 +742,8 @@ error:
 		LOGI("start cc: caption %d, fgc %d, bgc %d, fgo %d, bgo %d, fsize %d, fstyle %d",
 			caption, fg_color, bg_color, fg_opacity, bg_opacity, font_size, font_style);
 		
-		memset(cc_param, 0, sizeof(cc_param));
-		memset(spara, 0, sizeof(spara));
+		memset(&cc_para, 0, sizeof(cc_para));
+		memset(&spara, 0, sizeof(spara));
 
 		cc_para.bmp_buffer = data->buffer;
 		cc_para.pitch = data->bmp_pitch;
