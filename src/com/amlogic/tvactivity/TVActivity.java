@@ -218,14 +218,14 @@ abstract public class TVActivity extends Activity
 			Log.d(TAG, "CC is disabled !");
 			return;
 		}
-		
+
 		if (prog.getType() == TVProgram.TYPE_ATV){
 
 		}else{
 			TVSubtitleView.DTVCCParams subp;
-			
+			int captionMode = getIntConfig("tv:atsc:cc:caption");
 			subp = new TVSubtitleView.DTVCCParams(
-				getIntConfig("tv:atsc:cc:caption"),
+				captionMode+1,
 				getIntConfig("tv:atsc:cc:foregroundcolor"),
 				getIntConfig("tv:atsc:cc:foregroundopacity"),
 				getIntConfig("tv:atsc:cc:backgroundcolor"),
@@ -287,7 +287,7 @@ abstract public class TVActivity extends Activity
 					}
 				}
 
-	    		
+
 				if(sub == null){
 					resetSubtitle(SUBTITLE_NONE);
 					return;
@@ -313,7 +313,7 @@ abstract public class TVActivity extends Activity
 			}
 		}else if(mode == SUBTITLE_TT){
 			TVProgram.Teletext tt = null;
-			
+
 			if(sub_id >= 0){
 				tt = prog.getTeletext(sub_id);
 				if (tt != null){
@@ -357,7 +357,7 @@ abstract public class TVActivity extends Activity
 
 			pgno = (id1==0) ? 800 : id1*100;
 			pgno += (id2 & 15) + ((id2 >> 4) & 15) * 10 + ((id2 >> 8) & 15) * 100;
-			ttp = new TVSubtitleView.DTVTTParams(dmx_id, pid, pgno, 0x3F7F, 
+			ttp = new TVSubtitleView.DTVTTParams(dmx_id, pid, pgno, 0x3F7F,
 				getTeletextRegionID(getStringConfig("tv:teletext:region")));
 
 			if(mode == SUBTITLE_SUB){
@@ -470,9 +470,9 @@ abstract public class TVActivity extends Activity
 			name.equals("tv:atsc:cc:fontsize") ||
 			name.equals("tv:atsc:cc:enable")){
 
-			
+
 			Log.d(TAG, name +" changed, reset cc now.");
-			
+
 			int prog_id = client.getCurrentProgramID();
 
 			if(prog_id == -1)
@@ -708,7 +708,7 @@ abstract public class TVActivity extends Activity
 
 	public void showVideo(){
 		if(subtitleView!=null) {
-			subtitleView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);	   
+			subtitleView.setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 			initSubtitle();
 			if(subtitleViewActive){
 				subtitleView.setActive(true);
@@ -790,7 +790,7 @@ abstract public class TVActivity extends Activity
     public void setInputSource(TVConst.SourceInput source) {
         client.setInputSource(source.ordinal());
     }
-    
+
     /**
      *得到当前信号源
      *@return 返回当前信号源
@@ -806,7 +806,7 @@ abstract public class TVActivity extends Activity
     public void setProgramType(int type){
     	client.setProgramType(type);
 	}
-    		
+
     /**
      *停止播放节目
      */
@@ -838,7 +838,7 @@ abstract public class TVActivity extends Activity
 			return;
 
 		TVProgram prog;
-		TVChannel chan; 
+		TVChannel chan;
 
 		prog = TVProgram.selectByID(this, prog_id);
 		if(prog == null)
@@ -929,7 +929,7 @@ abstract public class TVActivity extends Activity
     public void startTimeshifting() {
         client.startTimeshifting();
     }
-    
+
      /**
      *停止时移播放
      */
