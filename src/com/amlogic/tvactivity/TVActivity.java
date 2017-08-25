@@ -704,6 +704,8 @@ abstract public class TVActivity extends Activity
 				videoView.getHolder().setFormat(0x102);
 			else if( Integer.valueOf(android.os.Build.VERSION.SDK) == 21 || Integer.valueOf(android.os.Build.VERSION.SDK)==24)
 				videoView.getHolder().setFormat(PixelFormat.RGBA_8888);
+			else
+				videoView.getHolder().setFormat(PixelFormat.RGBA_8888);
         }
 
     }
