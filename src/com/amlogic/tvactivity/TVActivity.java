@@ -689,6 +689,8 @@ abstract public class TVActivity extends Activity
 			if( Integer.valueOf(android.os.Build.VERSION.SDK)>21) {
 				Log.d(TAG, "add callback");
 				videoView.getHolder().addCallback(surfaceHolderCallback);
+				if( Integer.valueOf(android.os.Build.VERSION.SDK) == 25)
+					videoView.getHolder().setFormat(PixelFormat.RGBA_8888);
 			}
         }else if(videoView == null) {
 			Log.d(TAG, "create video view");
